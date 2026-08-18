@@ -20,4 +20,5 @@ int main()
     printf("uint32(%lu): %d \n", sizeof(ui32), ui32);
     printf("int64(%lu): %lu \n", sizeof(i64), i64);
     printf("uint64(%lu): %lu \n", sizeof(ui64), ui64);
+    return 0;
 }

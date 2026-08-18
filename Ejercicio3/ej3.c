@@ -19,4 +19,5 @@ int main()
     printf("unsigned int(%lu): %d \n", sizeof(ui), ui);
     printf("long(%lu): %lu \n", sizeof(l), l);
     printf("unsigned long(%lu): %lu \n", sizeof(ul), ul);
+    return 0;
 }
