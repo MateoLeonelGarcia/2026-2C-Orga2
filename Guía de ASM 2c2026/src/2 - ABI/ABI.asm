@@ -97,21 +97,35 @@ alternate_sum_4_using_c_alternative:
 
 
 ; uint32_t alternate_sum_8(uint32_t x1, uint32_t x2, uint32_t x3, uint32_t x4, uint32_t x5, uint32_t x6, uint32_t x7, uint32_t x8);
-; registros y pila: x1[?], x2[?], x3[?], x4[?], x5[?], x6[?], x7[?], x8[?]
+; registros y pila: x1[EDI], x2[ESI], x3[EDX], x4[ECX], x5[R8], x6[R9], x7[pila], x8[pila]
 alternate_sum_8:
 	;prologo
-
-	; COMPLETAR
-
+  push RBP ;;alineo pila
+  mov RBP, RSP; ;;sumo al stack frame
+  mov R10D, [RSP+16] ;;x7
+  mov R11D, [RSP+24] ;;x8
+	sub EDI, ESI
+  add EDI, EDX
+  sub EDI, ECX
+  add EDI, R8D
+  sub EDI, R9D
+  add EDI, R10D
+  sub EDI, R11D
+  MOV EAX, EDI
 	;epilogo
+  pop RBP
 	ret
 
 
 ; SUGERENCIA: investigar uso de instrucciones para convertir enteros a floats y viceversa
 ;void product_2_f(uint32_t * destination, uint32_t x1, float f1);
-;registros: destination[?], x1[?], f1[?]
+;registros: destination[ESI], x1[EDI], f1[ECX]
 product_2_f:
-	ret
+
+ cvtsi2ss XMM1, EDI;;no es necesario convertir el float en float xD
+ MULSS XMM1, XMM2 ;;tengo que truncar el resultado a un entero nuevamente y de ahi guardarlo
+ MOVSS [ESI],XMM1
+ ret
 
 
 ;extern void product_9_f(double * destination
