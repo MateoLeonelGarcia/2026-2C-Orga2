@@ -119,12 +119,13 @@ alternate_sum_8:
 
 ; SUGERENCIA: investigar uso de instrucciones para convertir enteros a floats y viceversa
 ;void product_2_f(uint32_t * destination, uint32_t x1, float f1);
-;registros: destination[ESI], x1[EDI], f1[ECX]
+;registros: destination[EDI], x1[ESI], f1[XMM0]
 product_2_f:
 
- cvtsi2ss XMM1, EDI;;no es necesario convertir el float en float xD
- MULSS XMM1, XMM2 ;;tengo que truncar el resultado a un entero nuevamente y de ahi guardarlo
- MOVSS [ESI],XMM1
+ cvtsi2ss XMM1, ESI ;;x1 a float
+ MULSS XMM1, XMM0 
+ CVTtSS2SI ESI, XMM1 ;; float a entero
+ MOV [RDI],ESI ;; la direccion es de 64 bits, pero apunta a un uint32. Osea uso RDI y no EDI para ir a la posi de memoria
  ret
 
 
