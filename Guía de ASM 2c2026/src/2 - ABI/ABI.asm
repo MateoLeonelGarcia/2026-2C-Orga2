@@ -133,23 +133,69 @@ product_2_f:
 ;, uint32_t x1, float f1, uint32_t x2, float f2, uint32_t x3, float f3, uint32_t x4, float f4
 ;, uint32_t x5, float f5, uint32_t x6, float f6, uint32_t x7, float f7, uint32_t x8, float f8
 ;, uint32_t x9, float f9);
-;registros y pila: destination[rdi], x1[?], f1[?], x2[?], f2[?], x3[?], f3[?], x4[?], f4[?]
-;	, x5[?], f5[?], x6[?], f6[?], x7[?], f7[?], x8[?], f8[?],
-;	, x9[?], f9[?]
+;registros y pila: destination[RDI], x1[ESI], f1[XMM0], x2[EDX], f2[XMM1], x3[ECX], f3[XMM2], x4[R8], f4[XMM3]
+;	, x5[R9], f5[XMM4], x6[RBP+16], f6[XMM5], x7[RBP+24], f7[XMM6], x8[RBP+32], f8[XMM7],
+;	, x9[RBP+40], f9[RBP+40]
 product_9_f:
 	;prologo
 	push rbp
 	mov rbp, rsp
 
+  ;;guardar en registros scratch enteros de la pila y float de la pila
+  MOV R10D,[RBP+16]
+  MOV R11D,[RBP+24]
+  MOVSS XMM8,[RBP+48]
+  push R12
+  PUSH R13
+  MOV R12D, [RBP+32]
+  MOV R13D, [RBP+40]
+
 	;convertimos los flotantes de cada registro xmm en doubles
-	; COMPLETAR
+	CVTSS2SD XMM0,XMM0;;float a double
+  CVTSS2SD XMM1,XMM1
+  CVTSS2SD XMM2,XMM2
+  CVTSS2SD XMM3,XMM3
+  CVTSS2SD XMM4,XMM4
+  CVTSS2SD XMM5,XMM5
+  CVTSS2SD XMM6,XMM6
+  CVTSS2SD XMM7,XMM7
+  CVTSS2SD XMM8,XMM8
+
 
 	;multiplicamos los doubles en xmm0 <- xmm0 * xmm1, xmmo * xmm2 , ...
-	; COMPLETAR
+	MULSD XMM0,XMM1
+  MULSD XMM0,XMM2
+  MULSD XMM0,XMM3
+  MULSD XMM0,XMM4
+  MULSD XMM0,XMM5
+  MULSD XMM0,XMM6
+  MULSD XMM0,XMM7
+  MULSD XMM0,XMM8
 
 	; convertimos los enteros en doubles y los multiplicamos por xmm0.
-	; COMPLETAR
+	CVTSI2SD XMM9, ESI
+  MULSD XMM0,XMM9
+	CVTSI2SD XMM9, EDX
+  MULSD XMM0,XMM9
+	CVTSI2SD XMM9, ECX
+  MULSD XMM0,XMM9
+	CVTSI2SD XMM9, R8D
+  MULSD XMM0,XMM9
+	CVTSI2SD XMM9, R9D
+  MULSD XMM0,XMM9
+	CVTSI2SD XMM9, R10D
+  MULSD XMM0,XMM9
+	CVTSI2SD XMM9, R11D
+  MULSD XMM0,XMM9
+	CVTSI2SD XMM9, R12D
+  MULSD XMM0,XMM9
+	CVTSI2SD XMM9, R13D
+  MULSD XMM0,XMM9
 
+  MOVSD [RDI], XMM0
+
+  POP R13
+  POP R12
 	; epilogo
 	pop rbp
 	ret
