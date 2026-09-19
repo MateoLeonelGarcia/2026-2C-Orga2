@@ -1,0 +1,8 @@
+1. ¿En qué función se encuentra la clave?
+La clave verdadera se calcula y almacena en la función do_some_stuff (Frame #2).
+2. Explicación del mecanismo para llegar a encontrarla
+Breakpoint inicial: Se colocó un punto de interrupción en print_authentication_message, la función encargada de imprimir si la clave era correcta o no.
+Navegación del Stack (backtrace / frame): Al detenerse la ejecución, se utilizó backtrace para reconstruir la cadena de llamadas (main $\rightarrow$ do_some_stuff $\rightarrow$ do_some_more_stuff $\rightarrow$ print_authentication_message). 
+Mediante frame 2 nos posicionamos en el contexto de do_some_stuff.
+Inspección de memoria local sin símbolos: Como las funciones intermedias fueron compiladas sin información de variables locales (No symbol table info available), se procedió a inspeccionar directamente la pila (stack) desde el puntero de pila ($rsp).
+Casteo e impresión de punteros (p ({char*} $rsp)@5): Interpretando el contenido de la pila como un arreglo de direcciones de tipo char*, se listaron los punteros almacenados localmente. Esto reveló que en la posición offset +2 del $rsp residía el puntero a la dirección de memoria 0x555555559300 (ubicada en el Heap), la cual contiene la cadena con la clave esperada: "clave_192.168.0.7".
