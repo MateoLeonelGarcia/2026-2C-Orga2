@@ -4,6 +4,9 @@ extern fprintf
 
 section .data
 
+	fmt_str: db "%s",0
+	null_str: db "NULL",0
+
 section .text
 
 global strCmp
@@ -111,8 +114,30 @@ strDelete:
 	pop rbp
 	ret
 
-; void strPrint(char* a, FILE* pFile)
+; void strPrint(char* a[RDI], FILE* pFile[RSI])
 strPrint:
+	push rbp
+	mov rbp, rsp
+	mov r8, rdi
+	mov rdi, rsi
+	mov rdx, r8
+	cmp r8,0x0
+	je .casoNulo
+	mov r8b, [rdx]
+	cmp r8b,0x0
+	je .casoNulo
+	;;casoNoNulo puntero a pfile en rdi, en rsi fmt_s, en rdx puntero a
+	mov rsi, fmt_str
+	xor eax,eax
+	call fprintf
+	jmp .fin
+.casoNulo:
+	;;puntero a pfile en RDI, en RSI str_null 
+	mov rsi, null_str
+	xor eax,eax
+	call fprintf
+.fin
+	pop rbp
 	ret
 
 ; uint32_t strLen(char* a [RDI])
