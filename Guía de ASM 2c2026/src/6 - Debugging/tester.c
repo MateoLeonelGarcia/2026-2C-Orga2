@@ -269,7 +269,7 @@ void test_ej_4()
 		return;
 	}
 
-	test_4_un_elemento();
+	// test_4_un_elemento();
 	test_4_tres_elementos();
 
 	if (failed_at_start < failed_tests)

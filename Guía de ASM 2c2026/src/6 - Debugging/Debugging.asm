@@ -15,7 +15,7 @@ ITEM_OFFSET_NOMBRE EQU 0;;9
 ITEM_OFFSET_ID EQU 12;;16
 ITEM_OFFSET_CANTIDAD EQU 16;;24
 
-POINTER_SIZE EQU 4
+POINTER_SIZE EQU 8
 UINT32_SIZE EQU 4
 
 ; Marcar el ejercicio como hecho (`true`) o pendiente (`false`).
@@ -128,8 +128,9 @@ ejercicio4:
 	mul r9d
 	mov [r15+rbx*UINT32_SIZE], eax
 	
-	mov rsi, r8 
+	mov rdi, r8 
 	call free
+	mov [r12 + rbx*POINTER_SIZE], dword 0x0
 
 	inc rbx
 	jmp .loop
