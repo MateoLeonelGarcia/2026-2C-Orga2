@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdint.h>
+#include <stdlib.h>
 typedef struct
 {
     char *nombre;
@@ -18,7 +19,12 @@ persona_t *crearPersona(char nombre[], uint8_t edad)
     persona1->nombre = nombre;
     persona1->edad = edad;
     return persona1;
-};
+}
+
+void eliminarPersona(persona_t *p)
+{
+    free(p);
+}
 
 int main()
 {
